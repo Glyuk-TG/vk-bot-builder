@@ -1,61 +1,165 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Конструктор VK-бота</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/drawflow@0.0.59/dist/drawflow.min.css">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <header class="topbar">
-    <h1>Конструктор VK-бота</h1>
-    <div class="actions">
-      <button id="btn-add-message">+ Сообщение</button>
-      <button id="btn-add-buttons">+ Кнопки</button>
-      <button id="btn-add-condition">+ Условие</button>
-      <button id="btn-add-wait">+ Ждать ввод</button>
-      <button id="btn-export">Экспорт JSON</button>
-      <button id="btn-import">Импорт JSON</button>
-      <input type="file" id="file-input" accept=".json" hidden>
-    </div>
-  </header>
+* { box-sizing: border-box; }
 
-  <div class="editor-layout">
-    <div id="drawflow" class="canvas"></div>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: #f6f8fa;
+  color: #1f2328;
+  overflow: hidden;
+}
 
-    <aside class="sidebar">
-      <h2>Редактирование блока</h2>
-      <div id="no-selection">Выбери блок на холсте, чтобы отредактировать</div>
-      <div id="editor-form" hidden>
-        <label>ID блока
-          <input type="text" id="node-id" readonly>
-        </label>
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background: #fff;
+  border-bottom: 1px solid #d0d7de;
+  flex-shrink: 0;
+}
 
-        <div id="field-text" class="field">
-          <label>Текст сообщения
-            <textarea id="node-text" rows="5" placeholder="Привет, %first_name%!"></textarea>
-          </label>
-        </div>
+.topbar h1 {
+  font-size: 18px;
+  margin: 0;
+}
 
-        <div id="field-buttons" class="field" hidden>
-          <label>Кнопки (по одной на строку)</label>
-          <div id="buttons-list"></div>
-          <button type="button" id="btn-add-button-row">+ Добавить кнопку</button>
-        </div>
+.actions button {
+  margin-left: 6px;
+  padding: 6px 12px;
+  border: 1px solid #d0d7de;
+  background: #f6f8fa;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
 
-        <div id="field-var" class="field" hidden>
-          <label>Имя переменной
-            <input type="text" id="node-var-name" placeholder="например: city">
-          </label>
-        </div>
+.actions button:hover {
+  background: #eaeef2;
+}
 
-        <button type="button" id="btn-delete-node" class="danger">Удалить блок</button>
-      </div>
-    </aside>
-  </div>
+.editor-layout {
+  display: flex;
+  height: calc(100vh - 57px);
+  width: 100vw;
+}
 
-  <script src="https://cdn.jsdelivr.net/npm/drawflow@0.0.59/dist/drawflow.min.js"></script>
-  <script src="app.js"></script>
-</body>
-</html>
+.canvas {
+  flex: 1 1 auto;
+  min-width: 0;
+  position: relative;
+  background: #f6f8fa;
+  overflow: hidden;
+}
+
+/* ВАЖНО: явные размеры для самого Drawflow */
+#drawflow {
+  width: 100%;
+  height: 100%;
+}
+
+.sidebar {
+  width: 320px;
+  flex-shrink: 0;
+  background: #fff;
+  border-left: 1px solid #d0d7de;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.sidebar h2 {
+  font-size: 14px;
+  margin: 0 0 12px;
+  color: #656d76;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sidebar label {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: #24292f;
+}
+
+.sidebar input[type="text"],
+.sidebar textarea {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  margin-top: 4px;
+}
+
+.sidebar textarea {
+  resize: vertical;
+}
+
+.sidebar button {
+  padding: 6px 12px;
+  border: 1px solid #d0d7de;
+  background: #f6f8fa;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.sidebar button.danger {
+  background: #fff;
+  color: #cf222e;
+  border-color: #cf222e;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.sidebar button.danger:hover {
+  background: #cf222e;
+  color: #fff;
+}
+
+#no-selection {
+  font-size: 13px;
+  color: #656d76;
+  font-style: italic;
+}
+
+.drawflow-node {
+  border-radius: 8px !important;
+  font-size: 13px;
+  min-width: 180px;
+}
+
+.drawflow-node .title-box {
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 8px 8px 0 0;
+}
+
+.node-message .title-box { background: #ddf4ff; color: #0969da; }
+.node-buttons .title-box { background: #dafbe1; color: #1a7f37; }
+.node-condition .title-box { background: #fff8c5; color: #9a6700; }
+.node-wait .title-box { background: #ffebe9; color: #cf222e; }
+
+.drawflow .drawflow-node .input,
+.drawflow .drawflow-node .output {
+  background: #0969da;
+}
+
+.button-row {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.button-row input {
+  flex: 1;
+}
+
+.button-row button {
+  padding: 4px 8px !important;
+  margin-top: 0 !important;
+}
