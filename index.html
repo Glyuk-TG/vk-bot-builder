@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Конструктор VK-бота</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/drawflow@0.0.59/dist/drawflow.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Конструктор VK-бота</h1>
+    <div class="actions">
+      <button id="btn-add-message">+ Сообщение</button>
+      <button id="btn-add-buttons">+ Кнопки</button>
+      <button id="btn-add-condition">+ Условие</button>
+      <button id="btn-add-wait">+ Ждать ввод</button>
+      <button id="btn-export">Экспорт JSON</button>
+      <button id="btn-import">Импорт JSON</button>
+      <input type="file" id="file-input" accept=".json" hidden>
+    </div>
+  </header>
+
+  <div class="editor-layout">
+    <div id="drawflow" class="canvas"></div>
+
+    <aside class="sidebar">
+      <h2>Редактирование блока</h2>
+      <div id="no-selection">Выбери блок на холсте, чтобы отредактировать</div>
+      <div id="editor-form" hidden>
+        <label>ID блока
+          <input type="text" id="node-id" readonly>
+        </label>
+
+        <div id="field-text" class="field">
+          <label>Текст сообщения
+            <textarea id="node-text" rows="5" placeholder="Привет, %first_name%!"></textarea>
+          </label>
+        </div>
+
+        <div id="field-buttons" class="field" hidden>
+          <label>Кнопки (по одной на строку)</label>
+          <div id="buttons-list"></div>
+          <button type="button" id="btn-add-button-row">+ Добавить кнопку</button>
+        </div>
+
+        <div id="field-var" class="field" hidden>
+          <label>Имя переменной
+            <input type="text" id="node-var-name" placeholder="например: city">
+          </label>
+        </div>
+
+        <button type="button" id="btn-delete-node" class="danger">Удалить блок</button>
+      </div>
+    </aside>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/drawflow@0.0.59/dist/drawflow.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
